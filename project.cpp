@@ -1,8 +1,8 @@
 #include <iostream>
+#include <iomanip>
 using namespace std;
 
-// Function to get a valid (non-negative) amount
-double ValidAmount(const string& message)
+double getValidAmount(const string& message)
 {
     double amount;
     do
@@ -19,73 +19,52 @@ double ValidAmount(const string& message)
     return amount;
 }
 
-// Function to calculate monthly tax based on current balance
-double MonthlyTax(double balance, double monthlyTaxRate)
-{
-    return balance * monthlyTaxRate;
-}
-
 int main()
 {
-    double annualTaxRate, initialBalance;
     int months;
+    double annualTaxRate;
+    double balance;
 
-    cout << "\n\t\tWELCOME TO SAVING ACCOUNT MANAGEMENT SYSTEM";
-    cout << "\n\t\t-------------------------------------------\n\n";
-
-    cout << "ENTER THE STARTING BALANCE OF THE ACCOUNT: ";
-    cin >> initialBalance;
-
-    cout << "ENTER THE ANNUAL TAX RATE (e.g. 0.12 for 12%): ";
+    cout << "\n\nENTER ANNUAL TAX DEDUCTION RATE (%): ";
     cin >> annualTaxRate;
 
-    cout << "ENTER THE TOTAL NUMBER OF MONTHS SINCE THE ACCOUNT WAS OPENED: ";
+    cout << "ENTER INITIAL ACCOUNT BALANCE: ";
+    cin >> balance;
+
+    cout << "ENTER TOTAL NUMBER OF MONTHS: ";
     cin >> months;
 
-    cout << "\n-------------------------------------------------------------\n\n";
+    double monthlyTaxRate = (annualTaxRate / 100) / 12;
 
-    // Arrays to store monthly data
-    double deposit[months];
-    double withdrawal[months];
-    double tax[months];
+    double deposits[months];
+    double withdrawals[months];
+    double taxes[months];
 
-    double monthlyTaxRate = annualTaxRate / 12;
-
-    double balance = initialBalance;
-    double totalDeposit = 0;
-    double totalWithdrawal = 0;
+    double totalDeposits = 0;
+    double totalWithdrawals = 0;
     double totalTax = 0;
 
     for (int i = 0; i < months; i++)
     {
-        cout << "MONTH " << i + 1 << " TRANSACTIONS\n";
+        cout << "\nMONTH " << i + 1 << "\n";
 
-        // Deposit
-        deposit[i] = ValidAmount("ENTER DEPOSIT AMOUNT: ");
-        balance += deposit[i];
-        totalDeposit += deposit[i];
+        deposits[i] = getValidAmount("Enter deposit amount: ");
+        balance += deposits[i];
+        totalDeposits += deposits[i];
 
-        // Withdrawal
-        withdrawal[i] = ValidAmount("ENTER WITHDRAWAL AMOUNT: ");
-        balance -= withdrawal[i];
-        totalWithdrawal += withdrawal[i];
+        withdrawals[i] = getValidAmount("Enter withdrawal amount: ");
+        balance -= withdrawals[i];
+        totalWithdrawals += withdrawals[i];
 
-        // Tax calculation
-        tax[i] = MonthlyTax(balance, monthlyTaxRate);
-        balance -= tax[i];
-        totalTax += tax[i];
-
-        cout << "BALANCE AFTER MONTH " << i + 1 << ": " << balance << "\n\n";
+        taxes[i] = balance * monthlyTaxRate;
+        balance -= taxes[i];
+        totalTax += taxes[i];
     }
 
-    cout << "\n=============================================================\n";
-    cout << "FINAL ACCOUNT SUMMARY\n";
-    cout << "=============================================================\n";
-    cout << "FINAL BALANCE: " << balance << endl;
-    cout << "TOTAL AMOUNT DEPOSITED: " << totalDeposit << endl;
-    cout << "TOTAL AMOUNT WITHDRAWN: " << totalWithdrawal << endl;
-    cout << "TOTAL TAX DEDUCTED: " << totalTax << endl;
+    cout << "\n\nACCOUNT SUMMARY\n\n";
+    cout << "Final Account Balance: " <<fixed << setprecision(2) << balance << endl;
+    cout << "Total Deposited: " << totalDeposits << endl;
+    cout << "Total Withdrawn: " << totalWithdrawals << endl;
+    cout << "Total Tax Deducted: " <<fixed << setprecision(2)<< totalTax << endl;
 
-    return 0;
 }
-
